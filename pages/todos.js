@@ -5,11 +5,11 @@ import styles from "../styles/Home.module.css";
 import { useContext, useState, useEffect, createContext, useMemo } from "react";
 import axios from "axios";
 
-const useTodos = () => {
+const useTodos = (data) => {
   const [todos, setTodos] = useState(undefined);
 
   useEffect(() => {
-    if (!todos) {
+    if (!data || !todos) {
       axios
         .get("https://jsonplaceholder.typicode.com/todos")
         .then(({ data }) => {
@@ -56,11 +56,13 @@ function TodosDisplay() {
 }
 
 export default function Todos({ data, error, loading }) {
+  const { todos, setTodos } = useTodos(data);
+
   if (error) {
     return <p>Error: {error}</p>;
   } else if (loading) {
     return <p>Loading...</p>;
-  } else if (!data) {
+  } else if (!data && !todos) {
     return <p>No data</p>;
   } else {
     return (
@@ -72,9 +74,7 @@ export default function Todos({ data, error, loading }) {
         </Head>
 
         <main className={styles.main}>
-          <h1 className={styles.title}>
-            Todos
-          </h1>
+          <h1 className={styles.title}>Todos</h1>
         </main>
         <Link href="/todos">Todos</Link>
         <Link href="/">Home</Link>
@@ -108,28 +108,31 @@ export default function Todos({ data, error, loading }) {
 }
 
 Todos.getInitialProps = async ({ req }) => {
-  let response;
-  try {
-    response = await axios.get("https://jsonplaceholder.typicode.com/todos");
-  } catch (e) {
-    return {
-      data: undefined,
-      error: "could not fetch data",
-      loading: false,
-    };
-  }
+  if (!process.browser) {
+    let response;
+    try {
+      response = await axios.get("https://jsonplaceholder.typicode.com/todos");
+    } catch (e) {
+      return {
+        data: undefined,
+        error: "could not fetch data",
+        loading: false,
+      };
+    }
 
-  if (response.status === 200) {
-    return {
-      data: response.data,
-      error: undefined,
-      loading: false,
-    };
-  } else {
-    return {
-      data: undefined,
-      error: "could not fetch data",
-      loading: false,
-    };
+    if (response.status === 200) {
+      return {
+        data: response.data,
+        error: undefined,
+        loading: false,
+      };
+    } else {
+      return {
+        data: undefined,
+        error: "could not fetch data",
+        loading: false,
+      };
+    }
   }
+  return {};
 };
