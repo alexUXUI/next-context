@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 import { useContext, useState, useEffect, createContext, useMemo } from "react";
 import axios from "axios";
 
+// this is for client
 const useTodos = (data) => {
   const [todos, setTodos] = useState(undefined);
 
@@ -107,6 +108,7 @@ export default function Todos({ data, error, loading }) {
   }
 }
 
+// this is for server
 Todos.getInitialProps = async ({ req }) => {
   if (!process.browser) {
     let response;
