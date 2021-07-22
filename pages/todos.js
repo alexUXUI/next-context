@@ -70,7 +70,7 @@ function TodosComponent() {
   return <div>The current todos list is {JSON.stringify(todos)}</div>;
 }
 
-function TodosWrapperCompoennt({ ssrData, error }) {
+function TodosFeatureContainer({ ssrData, error }) {
   // custom hook that is responsible for managing the app data
   // if we got data back from an server-side request, we can pass it to this hook
   // so that the hook know _not_ to fetch data from the client, rather put that data in react
@@ -83,9 +83,6 @@ function TodosWrapperCompoennt({ ssrData, error }) {
   );
 }
 export default class Todos extends Component {
-  constructor({ ssrData, error }) {
-    super();
-  }
 
   componentDidMount() {
     if (this.props.ssrData) {
@@ -118,7 +115,11 @@ export default class Todos extends Component {
             <h1 className={styles.title}>Todos</h1>
             <Link href="/todos">Todos</Link>
             <Link href="/">Home</Link>
-            <TodosWrapperCompoennt ssrData={ssrData} error={error} />
+            
+            <TodosFeatureContainer 
+              ssrData={ssrData} 
+              error={error} 
+            />
           </main>
 
           <footer className={styles.footer}>
