@@ -66,16 +66,15 @@ function useTodosContext() {
 // it can do this because it is a child of the <TodosProvider />
 // notice how this component doesnt take any props 😎
 function TodosComponent() {
-  const [todos, setTodos] = useTodosContext();
-  return <div>The current todos list is {JSON.stringify(todos)}</div>;
-}
-
-function TodosFeatureContainer({ ssrData, error }) {
   // custom hook that is responsible for managing the app data
   // if we got data back from an server-side request, we can pass it to this hook
   // so that the hook know _not_ to fetch data from the client, rather put that data in react
   // state and make it available through "todos"
-  const { todos, loadingTodos, setTodos } = useTodos(ssrData);
+  const [todos, setTodos] = useTodosContext();
+  return <div>The current todos list is {JSON.stringify(todos)}</div>;
+}
+
+function TodosFeatureContainer() {
   return (
     <TodosProvider>
       <TodosComponent />
